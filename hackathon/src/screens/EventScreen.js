@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     },
     eventBox: {
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 20,
         backgroundColor: '#F8FAE5',
         marginBottom: 10,
         marginRight: 10, // ensure spacing for scrolling if necessary
@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
+        marginTop: 15,
         height: 50,
     },
     searchBar: {

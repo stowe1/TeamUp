@@ -164,7 +164,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8FAE5',
         marginBottom: 10,
         marginRight: 10,
-        width: 250,
+
+        borderRadius: 20,
     },
     eventTitle: {
         fontSize: 16,
