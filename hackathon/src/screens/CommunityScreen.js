@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 import { Image, View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
 
-export default function CommunityScreen({navigation}) {
+export default function CommunityScreen({ navigation }) {
     const [joinedEvents, setJoinedEvents] = useState([
         { id: 1, title: 'Morning Hoop Session', date: 'April 20, 2024', location: 'Central Park', description: 'All levels welcome' },
         { id: 2, title: 'Community 5K Run', date: 'April 25, 2024', location: 'City Stadium', description: 'A community run for charity.' },
@@ -53,7 +53,7 @@ export default function CommunityScreen({navigation}) {
 
             {/* Top Bar */}
             <View style={styles.topBar}>
-                <TouchableOpacity style={styles.circleContainer}>
+                <TouchableOpacity style={styles.circleContainer} onPress={() => setModalVisible(true)}>
                     <View style={styles.circle}>
                         <Text style={styles.plus}>+</Text>
                     </View>

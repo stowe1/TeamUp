@@ -50,6 +50,7 @@ export default function EventScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
+
             {/* Top Bar */}
             <View style={styles.search}>
                 <TouchableOpacity style={styles.circleContainer} onPress={() => setModalVisible(true)}>
@@ -132,7 +133,7 @@ export default function EventScreen({ navigation }) {
                     </View>
                 </View>
             </Modal>
-            
+
         </View>
     );
 }
