@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
+import { Image, View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
 
 export default function EventScreen({ navigation }) {
     const [joinedEvents, setJoinedEvents] = useState([
@@ -50,6 +50,7 @@ export default function EventScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
+            {/* Top Bar */}
             <View style={styles.search}>
                 <TouchableOpacity style={styles.circleContainer} onPress={() => setModalVisible(true)}>
                     <View style={styles.circle}>
@@ -64,9 +65,16 @@ export default function EventScreen({ navigation }) {
                     value={searchQuery}
                 />
                 <View style={styles.circleContainer}>
-                    <View style={styles.circle}></View>
+                    <View style={styles.circle}>
+                        <Image
+                            source={require('./assets/default_icon.png')} // Set the image source here
+                            style={styles.circleImage}
+                        />
+                    </View>
                 </View>
             </View>
+
+            {/* Middle Section */}
             <ScrollView style={styles.scrollView}>
                 {['joined', 'upcoming'].map(section => (
                     <View key={section} style={styles.section}>
@@ -177,12 +185,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        marginTop: 0,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderColor: 'gray',
-        height: 50,
+        paddingHorizontal: 10,
+        borderTopRadius: 8,
+        borderBottomRadius: 8,
+        backgroundColor: '#f0f0f0',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        height: 60,
     },
     circleContainer: {
         width: 40,
@@ -191,24 +206,31 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     circle: {
-        width: 30,
-        height: 30,
-        borderRadius: 15,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         borderWidth: 1,
         borderColor: '#000',
         alignItems: 'center',
         justifyContent: 'center',
     },
     plus: {
-        fontSize: 20,
+        fontSize: 30,
         textAlign: 'center',
-        lineHeight: 25,
+        lineHeight: 35,
+    },
+    circleImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 20,
     },
     searchBar: {
         flex: 1,
         height: 40,
         backgroundColor: '#eee',
         borderRadius: 20,
+        borderColor: 'gray',
+        borderWidth: 1,
         paddingHorizontal: 15,
         marginLeft: 10,
         marginRight: 10,
