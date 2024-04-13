@@ -18,19 +18,22 @@ export default function LoginScreen({onLogin, signUp}) {
         navigation.navigate('SignUp');
     };
     const handleLogin = async () => {
+        console.log(email);
         
         const { data, error } = await supabase
         .from('users')
         .select('*')
         .eq('email', email)
         .eq('password', password);
-        if (error) {
+        if (error || data.length === 0) {
             alert('No Account Found! Please Sign Up!')
             console.log(error);
-            return;
         }
-        onLogin();
+        else{
+        console.log(email);
+        onLogin({email});
         navigation.navigate('ProfileScreen');
+        }
     }
 
     return (

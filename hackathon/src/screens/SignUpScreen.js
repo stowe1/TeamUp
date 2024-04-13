@@ -67,7 +67,7 @@ export default function SignUpScreen({ onSignUp, goBack }) {
         alert(error.message);
         return;
     } else {
-        onSignUp(); // callback on successful sign up
+        onSignUp(userData.email); // callback on successful sign up
     }
     };
 

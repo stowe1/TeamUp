@@ -25,14 +25,19 @@ export default function MainContainer() {
     const [loggedIn, setLoggedIn] = useState(false); // Initially not logged in
     const [signedUp, setSignedUp] = useState(false); // Initially not signed up
     const [signUpToTab, setSignUpToTab] = useState(false); // Initially not going from sign up to tab navigator
+    const [email, setEmail] = useState(''); // Initially empty email
+    const [password, setPassword] = useState(''); // Initially empty password
 
     // Function to handle login
-    const handleLogin = () => {
+    const handleLogin = ({email}) => {
+        setEmail(email);
+        console.log(email);
         setLoggedIn(true); // Set to true when user logs in successfully
     };
 
     // Function to handle sign up
-    const handleSignUp = () => {
+    const handleSignUp = (email) => {
+        setEmail(email);
         setSignedUp(true); // Set to true when user signs up successfully
     };
 
@@ -121,10 +126,25 @@ const TabNavigator = () => {
             
             
         >   
-            <Tab.Screen name={Profile} component={ProfileScreen} />
-            <Tab.Screen name={Community} component={CommunityScreen} />
-            <Tab.Screen name={Map} component={MapScreen} />
-            <Tab.Screen name={Event} component={EventScreen} />
+            <Tab.Screen 
+                name={Map} 
+                component={() => <MapScreen email={email} />} 
+            />
+            <Tab.Screen 
+                name={Community} 
+                component={() => <CommunityScreen email={email} />}  
+            />
+            <Tab.Screen 
+                name={Event} 
+                component={() => <EventScreen email={email} />}  
+            />
+            <Tab.Screen 
+                name={Profile} 
+                component={() => <ProfileScreen email={email} />} 
+            />
+            
+            
+            
         </Tab.Navigator>
     );
 }
