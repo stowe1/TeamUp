@@ -14,7 +14,7 @@ export default function EventScreen({ navigation, email }) {
         { id: 1, title: 'Neighborhood Wiffleball Game', date: 'May 5, 2024', location: 'Riverbank Plaza', description: 'All ages welcome, teams of 9' },
         { id: 2, title: 'Charity Basketball Game', date: 'May 10, 2024', location: 'Downtown Arena', description: 'Watch or join the local charity basketball game. Max 7 people per team' },
         { id: 3, title: 'Frisbee Golf Meetup', date: 'May 15, 2024', location: 'Innovation Hub', description: 'Network with local frisbee golf enthusiasts and professionals.' },
-        { id: 4, title: 'Outdoor Yoga', date: 'May 20, 2024', location: 'City Park Amphitheater', description: 'Enjoy an evening of traquility and relaxation under the stars.' }
+        { id: 4, title: 'Outdoor Yoga', date: 'May 20, 2024', location: 'City Park Amphitheater', description: 'Enjoy an evening of tranquility and relaxation under the stars.' }
     ]);
     const [searchQuery, setSearchQuery] = useState('');
     const [eventDetailsModalVisible, setEventDetailsModalVisible] = useState(false);
@@ -77,6 +77,16 @@ export default function EventScreen({ navigation, email }) {
         });
     };
 
+    // Filter joined events based on search query
+    const filteredJoinedEvents = joinedEvents.filter(event =>
+      event.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Filter upcoming events based on search query
+    const filteredUpcomingEvents = upcomingEvents.filter(event =>
+      event.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <View style={styles.container}>
             <View style={styles.search}>
@@ -96,7 +106,7 @@ export default function EventScreen({ navigation, email }) {
                 <View key="1">
                     <ScrollView style={styles.scrollView}>
                         <Text style={styles.sectionHeader}>Joined Events</Text>
-                        {joinedEvents.map((event) => (
+                        {filteredJoinedEvents.map((event) => (
                             <TouchableOpacity key={event.id} onPress={() => openEventDetails(event, 'joined')}>
                                 <View style={styles.eventBox}>
                                     <Text style={styles.eventTitle}>{event.title}</Text>
@@ -111,7 +121,7 @@ export default function EventScreen({ navigation, email }) {
                 <View key="2">
                     <ScrollView style={styles.scrollView}>
                         <Text style={styles.sectionHeader}>Upcoming Events</Text>
-                        {upcomingEvents.map((event) => (
+                        {filteredUpcomingEvents.map((event) => (
                             <TouchableOpacity key={event.id} onPress={() => openEventDetails(event, 'upcoming')}>
                                 <View style={styles.eventBox}>
                                     <Text style={styles.eventTitle}>{event.title}</Text>
