@@ -4,21 +4,22 @@ import {View, Text, TextInput, StyleSheet} from 'react-native';
 export default function CommunityScreen({navigation}) {
     return (
         <View>
-            <View style={styles.container}>
-                <View style={styles.circleContainer}>
-                    <View style={styles.circle}>
-                        <Text style={styles.plus}>+</Text>
+            <View>
+                <View style={styles.container}>
+                    <View style={styles.circleContainer}>
+                        <View style={styles.circle}>
+                            <Text style={styles.plus}>+</Text>
+                        </View>
+                    </View>
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search for Communities"
+                        placeholderTextColor="#666" />
+                    <View style={styles.circleContainer}>
+                        <View style={styles.circle}></View>
                     </View>
                 </View>
-                <TextInput
-                    style={styles.searchBar}
-                    placeholder="Search"
-                    placeholderTextColor="#666" />
-                <View style={styles.circleContainer}>
-                    <View style={styles.circle}></View>
-                </View>
             </View>
-            <View><Text>Community Screen</Text></View>
         </View>
     );
 }
@@ -29,7 +30,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        marginTop: 20,
+        marginTop: 0,
+        borderRightWidth: 0,
+        borderLeftWidth: 0,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: 'gray',
+        height: 50,
       },
       circleContainer: {
         width: 40,
@@ -48,6 +55,8 @@ const styles = StyleSheet.create({
       },
       plus: {
         fontSize: 20,
+        textAlign: 'center',
+        lineHeight: 25,
       },
       searchBar: {
         flex: 1,
