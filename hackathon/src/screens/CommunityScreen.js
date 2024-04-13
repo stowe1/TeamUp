@@ -23,6 +23,14 @@ export default function CommunityScreen({ navigation, email }) {
     const [selectedCommunity, setSelectedCommunity] = useState(null);
     const [isCommunityFromJoined, setIsCommunityFromJoined] = useState(false);
 
+    const [newCommunity, setNewCommunity] = useState({
+        title: '',
+        date: '',
+        location: '',
+        description: '',
+    });
+    const [addCommunityModalVisible, setAddCommunityModalVisible] = useState(false);
+
     
 
     const handleCommunityClick = (community, fromJoined) => {
@@ -42,6 +50,16 @@ export default function CommunityScreen({ navigation, email }) {
         setCommunityDetailsModalVisible(false);
     };
 
+    const handleAddCommunity = () => {
+        setUpcomingCommunities([...upcomingCommunities, newCommunity]); // Corrected function name
+        setAddCommunityModalVisible(false);
+        setNewCommunity({
+            title: '',
+            date: '',
+            location: '',
+            description: '',
+        });
+    };
     return (
         <View style={styles.container}>
             <View style={styles.search}>
@@ -74,7 +92,7 @@ export default function CommunityScreen({ navigation, email }) {
                 </View>
                 <View key="2" style={{flex: 1}}>
                     <ScrollView style={styles.scrollView}>
-                        <Text style={styles.sectionHeader}>Upcoming Communities</Text>
+                        <Text style={styles.sectionHeader}>Recommended Communities</Text>
                         {upcomingCommunities.map((community) => (
                             <TouchableOpacity key={community.id} onPress={() => handleCommunityClick(community, false)}>
                                 <View style={styles.eventBox}>
@@ -105,6 +123,45 @@ export default function CommunityScreen({ navigation, email }) {
                     </View>
                 </View>
             </Modal>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={addCommunityModalVisible}
+                onRequestClose={() => setAddCommunityModalVisible(false)}
+            >
+                <View style={styles.centeredOverlay}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>Add New Community</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Title"
+                            onChangeText={(text) => setNewCommunity({ ...newCommunity, title: text })}
+                            value={newCommunity.title}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Date"
+                            onChangeText={(text) => setNewCommunity({ ...newCommunity, date: text })}
+                            value={newCommunity.date}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Location"
+                            onChangeText={(text) => setNewCommunity({ ...newCommunity, location: text })}
+                            value={newCommunity.location}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Description"
+                            onChangeText={(text) => setNewCommunity({ ...newCommunity, description: text })}
+                            value={newCommunity.description}
+                        />
+                        <Button title="Add Community" onPress={handleAddCommunity} />
+                        <Button title="Cancel" onPress={() => setAddCommunityModalVisible(false)} />
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -123,6 +180,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         color: '#F8FAE5',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     eventBox: {
         padding: 10,

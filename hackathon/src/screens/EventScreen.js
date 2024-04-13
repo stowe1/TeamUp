@@ -19,6 +19,7 @@ export default function EventScreen({ navigation, email }) {
     const [eventDetailsModalVisible, setEventDetailsModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     
+    
     const [newEvent, setNewEvent] = useState({
         title: '',
         date: '',
