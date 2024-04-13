@@ -1,63 +1,49 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button, Platform  } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
-
 
 export default function EventScreen({ navigation }) {
     const [joinedEvents, setJoinedEvents] = useState([
         { id: 1, title: 'Morning Hoop Session', date: 'April 20, 2024', location: 'Central Park', description: 'All levels welcome' },
         { id: 2, title: 'Community 5K Run', date: 'April 25, 2024', location: 'City Stadium', description: 'A community run for charity.' },
-        { id: 3, title: 'Annual Neighborhood Soccer Game', date: 'April 30, 2024', location: 'Library Hall', description: 'Bring your family and friends to this inclusive soccer experience' },
+        { id: 3, title: 'Annual Neighborhood Soccer Game', date: 'April 30, 2024', location: 'Library Hall', description: 'Bring yoiur family and friends to this inclusive soccer experience' },
         { id: 4, title: 'Local Flag Football', date: 'May 1, 2024', location: 'Downtown Market', description: 'Ages 10-13 only' }
+
     ]);
     const [upcomingEvents, setUpcomingEvents] = useState([
         { id: 1, title: 'Neighborhood Wiffleball Game', date: 'May 5, 2024', location: 'Riverbank Plaza', description: 'All ages welcome, teams of 9' },
         { id: 2, title: 'Charity Basketball Game', date: 'May 10, 2024', location: 'Downtown Arena', description: 'Watch or join the local charity basketball game. Max 7 people per team' },
         { id: 3, title: 'Frisbee Golf Meetup', date: 'May 15, 2024', location: 'Innovation Hub', description: 'Network with local frisbee golf enthusiasts and professionals.' },
-        { id: 4, title: 'Outdoor Yoga', date: 'May 20, 2024', location: 'City Park Amphitheater', description: 'Enjoy an evening of tranquility and relaxation under the stars.' }
+        { id: 4, title: 'Outdoor Yoga', date: 'May 20, 2024', location: 'City Park Amphitheater', description: 'Enjoy an evening of traquility and relaxation under the stars.' }
+
     ]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [date, setDate] = useState(new Date());
-    const [show, setShow] = useState(false);  // State to control visibility of DateTimePicker
-    const [mode, setMode] = useState('date');
-    const [newEvent, setNewEvent] = useState({ title: '', date: '', location: '', description: '', section: 'joined' });
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShow(false);
-        setDate(currentDate);
-    };
-    const showMode = (currentMode) => {
-        setShow(true);
-        setMode(currentMode);
-    };
-    const showDatepicker = () => {
-        setModalVisible(true);
-        showMode('date');
-    };
-    const handleAddEvent = () => {
-        const newEventToAdd = { ...newEvent, id: newEvent.section === 'joined' ? joinedEvents.length + 1 : upcomingEvents.length + 1 };
-        if (newEvent.section === 'joined') {
-            setJoinedEvents([...joinedEvents, newEventToAdd]);
-        } else {
-            setUpcomingEvents([...upcomingEvents, newEventToAdd]);
-        }
-        setNewEvent({ title: '', date: '', location: '', description: '', section: 'joined' });
-        setModalVisible(false);
+    const [eventDetailsModalVisible, setEventDetailsModalVisible] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+    const openEventDetails = (event, from) => {
+        setSelectedEvent({ ...event, from });
+        setEventDetailsModalVisible(true);
     };
 
-    const handleDeleteEvent = (id, section) => {
-        if (section === 'joined') {
-            setJoinedEvents(joinedEvents.filter(event => event.id !== id));
-        } else {
-            setUpcomingEvents(upcomingEvents.filter(event => event.id !== id));
+    const joinEvent = () => {
+        if (selectedEvent.from === 'upcoming') {
+            setUpcomingEvents(upcomingEvents.filter(event => event.id !== selectedEvent.id));
+            setJoinedEvents([...joinedEvents, selectedEvent]);
         }
+        setEventDetailsModalVisible(false);
+    };
+
+    const leaveEvent = () => {
+        if (selectedEvent.from === 'joined') {
+            setJoinedEvents(joinedEvents.filter(event => event.id !== selectedEvent.id));
+            setUpcomingEvents([...upcomingEvents, { ...selectedEvent, from: undefined }]);
+        }
+        setEventDetailsModalVisible(false);
     };
 
     const filterEvents = (events) => {
-        if (!searchQuery.trim()) return events;
         const lowerCaseQuery = searchQuery.toLowerCase();
         return events.filter(event =>
             event.title.toLowerCase().includes(lowerCaseQuery) ||
@@ -67,11 +53,9 @@ export default function EventScreen({ navigation }) {
         );
     };
 
-
     return (
         <View style={styles.container}>
             <View style={styles.search}>
- 
                 <TextInput
                     style={styles.searchBar}
                     placeholder="Search for Events"
@@ -79,24 +63,23 @@ export default function EventScreen({ navigation }) {
                     onChangeText={setSearchQuery}
                     value={searchQuery}
                 />
-                <TouchableOpacity style={styles.circleContainer} onPress={showDatepicker}>
-                <View style={styles.circle}>
+                <TouchableOpacity style={styles.circleContainer} onPress={() => console.log('Add Event Pressed')}>
                     <Ionicons name="add-circle-outline" size={40} color="#F8FAE5" />
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
             </View>
-            
+
             <ViewPager style={styles.viewPager} initialPage={0}>
                 <View key="1">
                     <ScrollView style={styles.scrollView}>
                         <Text style={styles.sectionHeader}>Joined Events</Text>
                         {filterEvents(joinedEvents).map((event) => (
-                            <View key={event.id} style={styles.eventBox}>
-                                <Text style={styles.eventTitle}>{event.title}</Text>
-                                <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
-                                <Text style={styles.eventDescription}>{event.description}</Text>
-                                <Button title="Delete" onPress={() => handleDeleteEvent(event.id, 'joined')} />
-                            </View>
+                            <TouchableOpacity key={event.id} onPress={() => openEventDetails(event, 'joined')}>
+                                <View style={styles.eventBox}>
+                                    <Text style={styles.eventTitle}>{event.title}</Text>
+                                    <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
+                                    <Text style={styles.eventDescription}>{event.description}</Text>
+                                </View>
+                            </TouchableOpacity>
                         ))}
                     </ScrollView>
                 </View>
@@ -104,62 +87,39 @@ export default function EventScreen({ navigation }) {
                     <ScrollView style={styles.scrollView}>
                         <Text style={styles.sectionHeader}>Upcoming Events</Text>
                         {filterEvents(upcomingEvents).map((event) => (
-                            <View key={event.id} style={styles.eventBox}>
-                                <Text style={styles.eventTitle}>{event.title}</Text>
-                                <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
-                                <Text style={styles.eventDescription}>{event.description}</Text>
-                                <Button title="Delete" onPress={() => handleDeleteEvent(event.id, 'upcoming')} />
-                            </View>
+                            <TouchableOpacity key={event.id} onPress={() => openEventDetails(event, 'upcoming')}>
+                                <View style={styles.eventBox}>
+                                    <Text style={styles.eventTitle}>{event.title}</Text>
+                                    <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
+                                    <Text style={styles.eventDescription}>{event.description}</Text>
+                                </View>
+                            </TouchableOpacity>
                         ))}
                     </ScrollView>
                 </View>
             </ViewPager>
-            
-            <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => setModalVisible(!modalVisible)}
->
-  <View style={styles.centeredOverlay}>
-    <View style={styles.modalContainer}>
-      <Text style={styles.modalTitle}>Add Event</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Title"
-        value={newEvent.title}
-        // onChangeText={setTitle}
-      />
-      <Text style={styles.modalTitle}>Select Date</Text>
-      {show && (
-        <DateTimePicker
-        testID="dateTimePicker"
-        value={date}
-        mode={mode}
-        is24Hour={true}
-        display="default"
-        onChange={onChange}
-        />
-      )}
-      <TextInput
-        style={styles.input}
-        placeholder="Location"
-        value={newEvent.location}
-        // onChangeText={setLocation}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Description"
-        value={newEvent.description}
-        // onChangeText={setDetails}
-        multiline
-      />
-      <Button title="Save" onPress={handleAddEvent} />
-      <Button title="Cancel" onPress={() => setModalVisible(false)} />
-    </View>
-  </View>
-</Modal>
 
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={eventDetailsModalVisible}
+                onRequestClose={() => setEventDetailsModalVisible(false)}
+            >
+                <View style={styles.centeredOverlay}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>{selectedEvent ? selectedEvent.title : ''}</Text>
+                        <Text>Date: {selectedEvent ? selectedEvent.date : ''}</Text>
+                        <Text>Location: {selectedEvent ? selectedEvent.location : ''}</Text>
+                        <Text>Description: {selectedEvent ? selectedEvent.description : ''}</Text>
+                        {selectedEvent?.from === 'upcoming' ? (
+                            <Button title="Join Event" onPress={joinEvent} />
+                        ) : (
+                            <Button title="Leave Event" onPress={leaveEvent} />
+                        )}
+                        <Button title="Close" onPress={() => setEventDetailsModalVisible(false)} />
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
