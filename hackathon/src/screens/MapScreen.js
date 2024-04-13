@@ -18,7 +18,7 @@ export default function MapScreen({ navigation }) {
         <div id="map"></div>
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
-            var map = L.map('map').setView([37.78825, -122.4324], 13);
+            var map = L.map('map').setView([36.06, -94.156], 12.5);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap'
