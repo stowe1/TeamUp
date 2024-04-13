@@ -74,6 +74,7 @@ const TabNavigator = ({ email }) => {
         tabBarStyle: styles.tabBarStyle,
         headerTitle: 'TeamUP',
         headerShown: route.name !== Map,
+        headerShown: route.name !== Profile,
         headerStyle: { backgroundColor: '#25294a', borderBottomWidth: 0, shadowOpacity: 0, elevation: 0 },
         headerTitleStyle: { fontWeight: 'bold', fontSize: 30, fontStyle: 'bold', color: '#EEE4B1' },
         tabBarIcon: ({ focused, color, size }) => {
