@@ -102,15 +102,15 @@ const TabNavigator = () => {
                     } else if (route.name === Community) {
                         iconName = focused ? 'people' : 'people-circle';
                     } else if (route.name === Map) {
-                        iconName = focused ? 'map' : 'map-circle';
+                        iconName = focused ? 'map' : 'map';
                     } else if (route.name === Event) {
-                        iconName = focused ? 'calendar' : 'calendar-circle';
+                        iconName = focused ? 'calendar' : 'calendar';
                     }
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
             })}
             tabBarOptions={{
-                activeTintColor: 'blue',
+                activeTintColor: 'white',
                 inactiveTintColor: 'gray',
                 style: {
                     backgroundColor: '#25294a', // Change the color of the bottom tab bar
