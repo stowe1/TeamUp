@@ -121,16 +121,14 @@ export default function ProfileScreen({ navigation, email }) {
             <View style={styles.imageContainer}>
                 <Text style={styles.displayName}>Hey, {displayedName}!</Text>
                 <Image
-                    source={images.background1}
-                    resizeMode='cover'
-                    style={styles.backgroundImage}
+          
                 />
             </View>
 
             <View style={styles.profileContainer}>
                 <Image
                     source={images.profile}
-                    resizeMode='contain'
+                    resizeMode='cover'
                     style={styles.profileImage}
                 />
                 <Text style={styles.displayCity}>{displayedCity}, {displayedState}</Text>
@@ -209,7 +207,7 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         borderColor: '#F8FAE5',
         borderWidth: 2,
-        top: -185,
+        top: 30,
     },
     displayName: {
         marginTop: 20,
@@ -227,7 +225,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: '#F8FAE5',
         marginBottom: 10,
-        top: -150,
+        top: 70,
     },
     input: {
         top: -15,

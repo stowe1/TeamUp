@@ -8,13 +8,13 @@ export default function EventScreen({ navigation, email }) {
     const [joinedEvents, setJoinedEvents] = useState([
         { id: 1, title: 'Community 5K Run', date: 'April 25, 2024', location: 'City Stadium', address: 'Fayetteville, AR 72701', description: 'A community run for charity.' },
         { id: 2, title: 'Annual Neighborhood Soccer Game', date: 'April 30, 2024', location: 'Library Hall', address:'201 Spring Street Springdale, AR 72764', description: 'Bring yoiur family and friends to this inclusive soccer experience' },
-        { id: 3, title: 'Local Flag Football', date: 'May 1, 2024', location: 'Downtown Market', description: 'Ages 10-13 only' }
+        { id: 3, title: 'Local Flag Football', date: 'May 1, 2024', location: 'Downtown Market',address: 'Fayetteville, AR 72701', description: 'Ages 10-13 only' }
     ]);
     const [upcomingEvents, setUpcomingEvents] = useState([
-        { id: 1, title: 'Neighborhood Wiffleball Game', date: 'May 5, 2024', location: 'Riverbank Plaza', description: 'All ages welcome, teams of 9' },
-        { id: 2, title: 'Charity Basketball Game', date: 'May 10, 2024', location: 'Downtown Arena', description: 'Watch or join the local charity basketball game. Max 7 people per team' },
-        { id: 3, title: 'Frisbee Golf Meetup', date: 'May 15, 2024', location: 'Innovation Hub', description: 'Network with local frisbee golf enthusiasts and professionals.' },
-        { id: 4, title: 'Outdoor Yoga', date: 'May 20, 2024', location: 'City Park Amphitheater', description: 'Enjoy an evening of tranquility and relaxation under the stars.' }
+        { id: 1, title: 'Neighborhood Wiffleball Game', date: 'May 5, 2024', location: 'Riverbank Plaza',address: 'New York City, New York', description: 'All ages welcome, teams of 9' },
+        { id: 2, title: 'Charity Basketball Game', date: 'May 10, 2024', location: 'Downtown Arena',address: 'Fayetteville, AR 72701', description: 'Watch or join the local charity basketball game. Max 7 people per team' },
+        { id: 3, title: 'Frisbee Golf Meetup', date: 'May 15, 2024', location: 'Innovation Hub',address: 'Fayetteville, AR 72701', description: 'Network with local frisbee golf enthusiasts and professionals.' },
+        { id: 4, title: 'Outdoor Yoga', date: 'May 20, 2024', location: 'City Park Amphitheater',address: 'Fayetteville, AR 72701', description: 'Enjoy an evening of tranquility and relaxation under the stars.' }
     ]);
     const [searchQuery, setSearchQuery] = useState('');
     const [eventDetailsModalVisible, setEventDetailsModalVisible] = useState(false);
@@ -108,7 +108,11 @@ export default function EventScreen({ navigation, email }) {
                         <Text style={styles.sectionHeader}>Joined Events</Text>
                         {filteredJoinedEvents.map((event) => (
                             <TouchableOpacity key={event.id} onPress={() => openEventDetails(event, 'joined')}>
+                            <TouchableOpacity style={styles.mapIcon} key={event.id} onPress={() => handleOpenInMaps()}>
+                                    <Ionicons name="pin" size={40} color="#ce5e31" />
+                                </TouchableOpacity>
                                 <View style={styles.eventBox}>
+                               
                                     <Text style={styles.eventTitle}>{event.title}</Text>
                                     <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
                                     <Text style={styles.eventInfo}>{event.address}</Text>
@@ -123,6 +127,9 @@ export default function EventScreen({ navigation, email }) {
                         <Text style={styles.sectionHeader}>Upcoming Events</Text>
                         {filteredUpcomingEvents.map((event) => (
                             <TouchableOpacity key={event.id} onPress={() => openEventDetails(event, 'upcoming')}>
+                                 <TouchableOpacity style={styles.mapIcon} key={event.id} onPress={() => handleOpenInMaps()}>
+                                    <Ionicons name="pin" size={40} color="#ce5e31" />
+                                </TouchableOpacity>
                                 <View style={styles.eventBox}>
                                     <Text style={styles.eventTitle}>{event.title}</Text>
                                     <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
@@ -312,6 +319,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
+    },
+    mapIcon: {
+        position: 'absolute',
+        right: 15,
+        top: 10,
+        zIndex: 1,
+        color: '#ce5e31',
     },
 
 });
