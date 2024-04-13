@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button, Platform  } from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 export default function EventScreen({ navigation }) {
     const [joinedEvents, setJoinedEvents] = useState([
@@ -18,8 +20,23 @@ export default function EventScreen({ navigation }) {
     ]);
     const [searchQuery, setSearchQuery] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const [date, setDate] = useState(new Date());
+    const [show, setShow] = useState(false);  // State to control visibility of DateTimePicker
+    const [mode, setMode] = useState('date');
     const [newEvent, setNewEvent] = useState({ title: '', date: '', location: '', description: '', section: 'joined' });
-
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(false);
+        setDate(currentDate);
+    };
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    };
+    const showDatepicker = () => {
+        setModalVisible(true);
+        showMode('date');
+    };
     const handleAddEvent = () => {
         const newEventToAdd = { ...newEvent, id: newEvent.section === 'joined' ? joinedEvents.length + 1 : upcomingEvents.length + 1 };
         if (newEvent.section === 'joined') {
@@ -62,7 +79,7 @@ export default function EventScreen({ navigation }) {
                     onChangeText={setSearchQuery}
                     value={searchQuery}
                 />
-                <TouchableOpacity style={styles.circleContainer} onPress={() => setModalVisible(true)}>
+                <TouchableOpacity style={styles.circleContainer} onPress={showDatepicker}>
                 <View style={styles.circle}>
                     <Ionicons name="add-circle-outline" size={40} color="#F8FAE5" />
                 </View>
@@ -98,10 +115,51 @@ export default function EventScreen({ navigation }) {
                 </View>
             </ViewPager>
             
-            <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(!modalVisible)}>
-                {/* Modal content for adding a new event */}
-                ...
-            </Modal>
+            <Modal
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => setModalVisible(!modalVisible)}
+>
+  <View style={styles.centeredOverlay}>
+    <View style={styles.modalContainer}>
+      <Text style={styles.modalTitle}>Add Event</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Title"
+        value={newEvent.title}
+        // onChangeText={setTitle}
+      />
+      <Text style={styles.modalTitle}>Select Date</Text>
+      {show && (
+        <DateTimePicker
+        testID="dateTimePicker"
+        value={date}
+        mode={mode}
+        is24Hour={true}
+        display="default"
+        onChange={onChange}
+        />
+      )}
+      <TextInput
+        style={styles.input}
+        placeholder="Location"
+        value={newEvent.location}
+        // onChangeText={setLocation}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        value={newEvent.description}
+        // onChangeText={setDetails}
+        multiline
+      />
+      <Button title="Save" onPress={handleAddEvent} />
+      <Button title="Cancel" onPress={() => setModalVisible(false)} />
+    </View>
+  </View>
+</Modal>
+
         </View>
     );
 }
@@ -230,5 +288,41 @@ const styles = StyleSheet.create({
     },
     viewPager: {
         flex: 1,
+
     },
-});
+    modalContainer: {
+        backgroundColor: '#F8FAE5', // Setting a neutral background color
+        padding: 20,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        width: '80%', // Making sure it's not too wide
+        maxHeight: '80%', // Prevents the modal from being too tall
+        alignItems: 'center', // Centers content horizontally within the modal
+    },
+    centeredOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)' // Semi-transparent background
+    },
+    
+    
+      modalTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+      },
+      input: {
+        width: '100%',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10,
+      },
+    });
+
