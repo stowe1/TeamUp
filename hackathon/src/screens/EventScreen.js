@@ -75,23 +75,26 @@ export default function EventScreen({ navigation }) {
             </View>
 
             {/* Middle Section */}
-            <ScrollView style={styles.scrollView}>
-                {['joined', 'upcoming'].map(section => (
-                    <View key={section} style={styles.section}>
-                        <Text style={styles.sectionHeader}>{section === 'joined' ? 'Joined Events' : 'Upcoming Events'}</Text>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            {filterEvents(section === 'joined' ? joinedEvents : upcomingEvents).map((event) => (
-                                <View key={event.id} style={styles.eventBox}>
-                                    <Text style={styles.eventTitle}>{event.title}</Text>
-                                    <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
-                                    <Text style={styles.eventDescription}>{event.description}</Text>
-                                    <Button title="Delete" onPress={() => handleDeleteEvent(event.id, section)} />
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
-                ))}
-            </ScrollView>
+            <View style={styles.bottomContainer}>
+                <ScrollView style={styles.scrollView}>
+                    {['joined', 'upcoming'].map(section => (
+                        <View key={section} style={styles.section}>
+                            <Text style={styles.sectionHeader}>{section === 'joined' ? 'Joined Events' : 'Upcoming Events'}</Text>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                {filterEvents(section === 'joined' ? joinedEvents : upcomingEvents).map((event) => (
+                                    <View key={event.id} style={styles.eventBox}>
+                                        <Text style={styles.eventTitle}>{event.title}</Text>
+                                        <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
+                                        <Text style={styles.eventDescription}>{event.description}</Text>
+                                        <Button title="Delete" onPress={() => handleDeleteEvent(event.id, section)} />
+                                    </View>
+                                ))}
+                            </ScrollView>
+                        </View>
+                    ))}
+                </ScrollView>
+            </View>
+            
             {/* Modal for Adding New Event */}
             <Modal
                 animationType="slide"
@@ -129,6 +132,7 @@ export default function EventScreen({ navigation }) {
                     </View>
                 </View>
             </Modal>
+            
         </View>
     );
 }
@@ -138,6 +142,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 0,
+    },
+    bottomContainer: {
+        backgroundColor: '#f0f0f0',
+        flex: 1,
     },
     scrollView: {
         marginHorizontal: 10,
