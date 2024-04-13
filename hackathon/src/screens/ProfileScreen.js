@@ -4,6 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, images } from "../constants";
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
+import { supabase } from '../components/supabase';
+import {QueryResult, QueryData, QueryError,} from '@supabase/supabase-js';  // Import your Supabase client
 
 export default function ProfileScreen({navigation}) {
     const [inputName, setInputName] = useState('');
