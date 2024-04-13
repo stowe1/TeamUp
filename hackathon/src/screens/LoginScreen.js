@@ -3,17 +3,32 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 import ProfileScreen from './ProfileScreen';
 import { Image } from 'react-native';
+import { supabase } from '../components/supabase';
+import { useState } from 'react';
+import {QUeryResult, QueryData, QueryError} from '@supabase/supabase-js';
 
 export default function LoginScreen({onLogin, signUp}) {
 
 
     const navigation = useNavigation();
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const signUpScreen = () => {
         signUp();
         navigation.navigate('SignUp');
     };
-    const handleLogin = () => {
+    const handleLogin = async () => {
+        
+        const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email)
+        .eq('password', password);
+        if (error) {
+            alert('No Account Found! Please Sign Up!')
+            console.log(error);
+            return;
+        }
         onLogin();
         navigation.navigate('ProfileScreen');
     }
@@ -31,12 +46,14 @@ export default function LoginScreen({onLogin, signUp}) {
                 autoCapitalize="none"
                 placeholderTextColor={'#ce5e31'}
                 keyboardType="email-address"
+                onChangeText={setEmail}
             />
             <TextInput
                 style={styles.input}
                 placeholderTextColor={'#ce5e31'}
                 placeholder="Password"
                 secureTextEntry
+                onChangeText={setPassword}
             />
             <TouchableOpacity style={styles.loginButton} onPress= {handleLogin}>
                 <Text style={styles.buttonText}>Login</Text>

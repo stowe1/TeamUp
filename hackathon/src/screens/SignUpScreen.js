@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native';
+import { QueryResult, QueryData, QueryError, } from '@supabase/supabase-js';  // Import your Supabase client
 import { supabase } from '../components/supabase';  // Import your Supabase client
-
 export default function SignUpScreen({ onSignUp, goBack }) {
     const navigation = useNavigation();
     const [formData, setFormData] = useState([
@@ -38,23 +38,37 @@ export default function SignUpScreen({ onSignUp, goBack }) {
             return;
         }
 
-        const { email, password: SignUppassword } = formData.reduce((acc, item) => {
+        const userData = formData.reduce((acc, item) => {
             acc[item.key] = item.value;
             return acc;
         }, {});
 
-        let { user, session, error } = await supabase.auth.signUp({
-            email,
-            SignUppassword
-        });
+        const { count } = await supabase
+        .from('users')  // Replace 'users' with your table name
+        .select('*', { count: 'exact' });  // Select all columns and get the count
 
-        if (error) {
-            alert(error.message);
-            return;
-        }
+    const id = count + 1;  // Increment the id by 1
+    console.log('new', id);  // Log the new id to the console
+    
+        const { data, error } = await supabase
+        .from('users')  
+        .insert([{
+            id: id,  
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            email: userData.email,
+            Age: parseInt(userData.age, 10), // assuming age is stored as a number
+            City: userData.city,
+            State: userData.state,
+            password: userData.password 
+        }]);
 
-        // Optionally handle additional user details here
-        onSignUp();
+    if (error) {
+        alert(error.message);
+        return;
+    } else {
+        onSignUp(); // callback on successful sign up
+    }
     };
 
     return (
