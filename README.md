@@ -24,19 +24,16 @@
 <br>
 <br>
 
-<strong>Current Tasks:</strong>
-- [ ] Getting color scheme down
-- [ ] Database functionality
-- [ ] Getting functionality on the maps
-- [x] Creating an event within a community
-- [ ] Allowing players to connect to an event
-- [ ] ballToggle function
-
 <div align="center">
   
 ### TeamUP Commercial
 [![TeamUP!](https://img.youtube.com/vi/DLt3suIMexI/0.jpg)](https://www.youtube.com/watch?v=DLt3suIMexI)
 </div>
+
+To run:
+- 'npm install' within directory.
+- 'npx expo start'.
+- scan QR code on mobile device.
 
 
 
