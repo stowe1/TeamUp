@@ -37,12 +37,16 @@ export default function EventScreen({ navigation }) {
 
     const leaveEvent = () => {
         if (selectedEvent.from === 'joined') {
-            setJoinedEvents(joinedEvents.filter(event => event.id !== selectedEvent.id));
-            setUpcomingEvents([...upcomingEvents, { ...selectedEvent, from: undefined }]);
+            setJoinedEvents(prevEvents =>
+                prevEvents.filter(event => event.id !== selectedEvent.id)
+            );
+            setUpcomingEvents(prevEvents => [
+                ...prevEvents,
+                { ...selectedEvent, from: undefined }
+            ]);
         }
         setEventDetailsModalVisible(false);
     };
-
     const filterEvents = (events) => {
         const lowerCaseQuery = searchQuery.toLowerCase();
         return events.filter(event =>
