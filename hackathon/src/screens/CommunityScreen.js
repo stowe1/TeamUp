@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, Image } from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 
-export default function CommunityScreen({ navigation }) {
+export default function CommunityScreen({ navigation, email }) {
     // Dummy data for the example
     const yourCommunities = [
         { id: 1, title: 'Pickleball Pirates', date: 'April 20, 2024', location: 'Central Park', description: 'We welcome all pickleball enthusiasts of any level' },

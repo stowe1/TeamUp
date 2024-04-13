@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-// Screens
+// Import screens
 import CommunityScreen from '../screens/CommunityScreen';
 import EventScreen from '../screens/EventScreen';
 import MapScreen from '../screens/MapScreen';
@@ -13,7 +13,6 @@ import ProfileScreen from '../screens/ProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 
-// Screen names
 const Profile = 'Profile';
 const Community = 'Community';
 const Map = 'Map';
@@ -21,138 +20,88 @@ const Event = 'Event';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-export default function MainContainer() {
-    const [loggedIn, setLoggedIn] = useState(false); // Initially not logged in
-    const [signedUp, setSignedUp] = useState(false); // Initially not signed up
-    const [signUpToTab, setSignUpToTab] = useState(false); // Initially not going from sign up to tab navigator
-    const [email, setEmail] = useState(''); // Initially empty email
-    const [password, setPassword] = useState(''); // Initially empty password
+export default class MainContainer extends Component {
+  state = {
+    loggedIn: false,
+    signedUp: false,
+    signUpToTab: false,
+    emailState: ''
+  };
 
-    // Function to handle login
-    const handleLogin = ({email}) => {
-        setEmail(email);
-        console.log(email);
-        setLoggedIn(true); // Set to true when user logs in successfully
-    };
+  handleLogin = ({ email }) => {
+    this.setState({ emailState: email, loggedIn: true });
+  };
 
-    // Function to handle sign up
-    const handleSignUp = (email) => {
-        setEmail(email);
-        setSignedUp(true); // Set to true when user signs up successfully
-    };
+  handleSignUp = (email) => {
+    this.setState({ emailState: email, signedUp: true });
+  };
 
-    // Function to handle going back to login from sign up
-    const goBackToLogin = () => {
-        setSignedUp(false);
-    };
+  goBackToLogin = () => {
+    this.setState({ signedUp: false });
+  };
 
-    // Function to navigate to tab navigator after signing up
-    const signUpToTabNav = () => {
-        setSignUpToTab(true);
-    };
+  signUpToTabNav = () => {
+    this.setState({ signUpToTab: true });
+  };
 
+  render() {
+    const { loggedIn, signUpToTab, signedUp, emailState } = this.state;
     return (
-        <NavigationContainer>
-            <Stack.Navigator
-                screenOptions={{
-                    headerStyle: {
-                        backgroundColor: '#25294a', // Change the color of the header
-                    },
-                    headerShown: false, // Show header for all screens
-                    headerTintColor: 'white', // Change the color of the text in the header
-                    headerTitleStyle: {
-                        fontWeight: 'bold', // Change the font weight of the header title
-                    },
-                }}
-            >
-                {loggedIn || signUpToTab ? (
-                    <Stack.Screen name="Tab" component={TabNavigator} options={{ title: 'Tab', headerShown: false }} />
-                ) : signedUp ? (
-                    <Stack.Screen name="SignUp" component={() => <SignUpScreen onSignUp={signUpToTabNav} goBack={goBackToLogin} />} options={{ title: 'Sign Up' }} />
-                ) : (
-                    <Stack.Screen name="Login" component={() => <LoginScreen onLogin={handleLogin} signUp={handleSignUp} />} options={{ title: 'Login' }} />
-                )}
-            </Stack.Navigator>
-        </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{
+          headerStyle: { backgroundColor: '#25294a' },
+          headerShown: false,
+          headerTintColor: 'white',
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}>
+          {loggedIn || signUpToTab ? (
+            <Stack.Screen name="Tab" children={() => <TabNavigator email={emailState} />} options={{ title: 'Tab', headerShown: false }} />
+          ) : signedUp ? (
+            <Stack.Screen name="SignUp" children={() => <SignUpScreen onSignUp={this.signUpToTabNav} goBack={this.goBackToLogin} />} options={{ title: 'Sign Up' }} />
+          ) : (
+            <Stack.Screen name="Login" children={() => <LoginScreen onLogin={this.handleLogin} signUp={this.handleSignUp} />} options={{ title: 'Login' }} />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
     );
+  }
 }
 
-const TabNavigator = () => {
-    return (
-        <Tab.Navigator
-            screenOptions={({ route }) => ({
-                tabBarStyle: styles.tabBarStyle,
-                headerTitle: 'TeamUP',
-                
-
-                headerShown: route.name !== Map, // Hide header for Map route
-                headerStyle: {
-                    backgroundColor: '#25294a', // Change the color of the header
-                    borderBottomWidth: 0, // Remove the border at the bottom of the header
-                    shadowOpacity: 0, // Remove any shadows
-                    elevation: 0, // Remove any shadows (for Android)
-                    
-                },
-                headerTitleStyle: { // Adjust the style of the header title
-                    fontWeight: 'bold', // Change the font weight of the header title
-                    fontSize: 30, // Change the font size of the header title
-                    fontStyle: 'bold', // Change the font style of the header title
-                    color: '#EEE4B1',
-    
-                },
-                tabBarIcon: ({ focused, color, size }) => {
-                    let iconName;
-                    if (route.name === Profile) {
-                        iconName = focused ? 'person' : 'person-circle';
-                    } else if (route.name === Community) {
-                        iconName = focused ? 'people' : 'people-circle';
-                    } else if (route.name === Map) {
-                        iconName = focused ? 'map' : 'map';
-                    } else if (route.name === Event) {
-                        iconName = focused ? 'calendar' : 'calendar';
-                    }
-                    return <Ionicons name={iconName} size={size} color={color} />;
-                },
-            })}
-            tabBarOptions={{
-                activeTintColor: 'white',
-                inactiveTintColor: 'gray',
-                style: {
-                    backgroundColor: '#25294a', // Change the color of the bottom tab bar
-                    borderTopColor: 'blue',
-                },
-            
-            }}
-            
-            
-        >   
-            <Tab.Screen 
-                name={Map} 
-                component={() => <MapScreen email={email} />} 
-            />
-            <Tab.Screen 
-                name={Community} 
-                component={() => <CommunityScreen email={email} />}  
-            />
-            <Tab.Screen 
-                name={Event} 
-                component={() => <EventScreen email={email} />}  
-            />
-            <Tab.Screen 
-                name={Profile} 
-                component={() => <ProfileScreen email={email} />} 
-            />
-            
-            
-            
-        </Tab.Navigator>
-    );
+const TabNavigator = ({ email }) => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarStyle: styles.tabBarStyle,
+        headerTitle: 'TeamUP',
+        headerShown: route.name !== Map,
+        headerStyle: { backgroundColor: '#25294a', borderBottomWidth: 0, shadowOpacity: 0, elevation: 0 },
+        headerTitleStyle: { fontWeight: 'bold', fontSize: 30, fontStyle: 'bold', color: '#EEE4B1' },
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === Profile) iconName = focused ? 'person' : 'person-circle';
+          else if (route.name === Community) iconName = focused ? 'people' : 'people-circle';
+          else if (route.name === Map) iconName = focused ? 'map' : 'map';
+          else if (route.name === Event) iconName = focused ? 'calendar' : 'calendar';
+          return <Ionicons name={iconName} size={size} color={color} />;
+        }
+      })}
+      tabBarOptions={{
+        activeTintColor: 'white',
+        inactiveTintColor: 'gray',
+        style: { backgroundColor: '#25294a', borderTopColor: 'blue' },
+      }}
+    >
+      <Tab.Screen name="Profile" children={() => <ProfileScreen email={email} />} />
+      <Tab.Screen name="Community" children={() => <CommunityScreen email={email} />} />
+      <Tab.Screen name="Map" children={() => <MapScreen email={email} />} />
+      <Tab.Screen name="Event" children={() => <EventScreen email={email} />} />
+    </Tab.Navigator>
+  );
 }
 
 const styles = StyleSheet.create({
-    tabBarStyle: {
-        backgroundColor: '#25294a', // Change the color of the bottom tab bar
-        borderTopWidth: 0.5,        
-        
-    },
+  tabBarStyle: {
+    backgroundColor: '#25294a',
+    borderTopWidth: 0.5
+  }
 });

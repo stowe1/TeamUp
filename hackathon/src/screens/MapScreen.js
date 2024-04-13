@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-export default function MapScreen({ navigation }) {
+export default function MapScreen({ navigation, email }) {
     const mapHtml = `
     <!DOCTYPE html>
     <html>

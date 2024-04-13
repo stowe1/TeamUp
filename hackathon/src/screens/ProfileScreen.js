@@ -7,9 +7,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { supabase } from '../components/supabase';
 import {QueryResult, QueryData, QueryError,} from '@supabase/supabase-js';  // Import your Supabase client
 
-export default function ProfileScreen({navigation}) {
+export default function ProfileScreen({navigation, email}) {
     const [inputName, setInputName] = useState('');
     const [displayedName, setDisplayedName] = useState('');
+    console.log('email in profile screen', email)
 
     const handleChangeName = (text) => {
         setInputName(text);

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal,
 import ViewPager from '@react-native-community/viewpager';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function EventScreen({ navigation }) {
+export default function EventScreen({ navigation, email }) {
     const [joinedEvents, setJoinedEvents] = useState([
         { id: 1, title: 'Morning Hoop Session', date: 'April 20, 2024', location: 'Central Park', description: 'All levels welcome' },
         { id: 2, title: 'Community 5K Run', date: 'April 25, 2024', location: 'City Stadium', description: 'A community run for charity.' },
