@@ -1,12 +1,13 @@
 import * as React from 'react';
-import {View, Text, TextInput, StyleSheet, ScrollView, Image} from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, Image } from 'react-native';
+import ViewPager from '@react-native-community/viewpager';
 
-export default function CommunityScreen({navigation}) {
+export default function CommunityScreen({ navigation }) {
     // Dummy data for the example
     const yourCommunities = [
         { id: 1, title: 'Pickleball Pirates', date: 'April 20, 2024', location: 'Central Park', description: 'We welcome all pickleball enthusiasts of any level' },
         { id: 2, title: 'Run4Fayetteville', date: 'April 25, 2024', location: 'City Stadium', description: 'A community run for charity.' },
-        { id: 3, title: 'Frisbee Golf For All', date: 'April 30, 2024', location: 'Library Hall', description: 'Bring yoiur family and friends to this inclusive soccer experience' },
+        { id: 3, title: 'Frisbee Golf For All', date: 'April 30, 2024', location: 'Library Hall', description: 'Bring your family and friends to this inclusive soccer experience' },
         { id: 4, title: 'Neighborhood Soccer', date: 'May 1, 2024', location: 'Downtown Market', description: 'Ages 10-13 only' }
     ];
 
@@ -14,12 +15,11 @@ export default function CommunityScreen({navigation}) {
         { id: 1, title: 'Neighborhood Wiffleball Game', date: 'May 5, 2024', location: 'Riverbank Plaza', description: 'All ages welcome, teams of 9' },
         { id: 2, title: 'Charity Basketball Game', date: 'May 10, 2024', location: 'Downtown Arena', description: 'Watch or join the local charity basketball game. Max 7 people per team' },
         { id: 3, title: 'Frisbee Golf Meetup', date: 'May 15, 2024', location: 'Innovation Hub', description: 'Network with local frisbee golf enthusiasts and professionals.' },
-        { id: 4, title: 'Outdoor Yoga', date: 'May 20, 2024', location: 'City Park Amphitheater', description: 'Enjoy an evening of traquility and relaxation under the stars.' }
+        { id: 4, title: 'Outdoor Yoga', date: 'May 20, 2024', location: 'City Park Amphitheater', description: 'Enjoy an evening of tranquility and relaxation under the stars.' }
     ];
-    
+
     return (
         <View style={styles.outerContainer}>
-
             {/* Top Bar */}
             <View style={styles.topBar}>
                 <View style={styles.circleContainer}>
@@ -31,46 +31,36 @@ export default function CommunityScreen({navigation}) {
                     style={styles.searchBar}
                     placeholder="Search for Communities"
                     placeholderTextColor="#666" />
-                <View style={styles.circleContainer}>
-                    <View style={styles.circle}>
-                        <Image
-                            source={require('./assets/default_icon.png')} // Set the image source here
-                            style={styles.circleImage}
-                        />
-                    </View>
-                </View>
+                <View style={styles.circleContainer}></View>
             </View>
 
-            {/* Middle Section */}
-            <View style={styles.bottomContainer}>
-                <ScrollView style={styles.scrollView}>
-                    <View style={styles.section}>
+            {/* ViewPager for swiping between sections */}
+            <ViewPager style={styles.viewPager} initialPage={0}>
+                <View key="1">
+                    <ScrollView style={styles.scrollView}>
                         <Text style={styles.sectionHeader}>Your Communities</Text>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            {yourCommunities.map((event) => (
-                                <View key={event.id} style={styles.eventBox}>
-                                    <Text style={styles.eventTitle}>{event.title}</Text>
-                                    <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
-                                    <Text style={styles.eventDescription}>{event.description}</Text>
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
-                    <View style={styles.section}>
+                        {yourCommunities.map((event) => (
+                            <View key={event.id} style={styles.eventBox}>
+                                <Text style={styles.eventTitle}>{event.title}</Text>
+                                <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
+                                <Text style={styles.eventDescription}>{event.description}</Text>
+                            </View>
+                        ))}
+                    </ScrollView>
+                </View>
+                <View key="2">
+                    <ScrollView style={styles.scrollView}>
                         <Text style={styles.sectionHeader}>Recommended Communities</Text>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            {recommendedCommunities.map((event) => (
-                                <View key={event.id} style={styles.eventBox}>
-                                    <Text style={styles.eventTitle}>{event.title}</Text>
-                                    <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
-                                    <Text style={styles.eventDescription}>{event.description}</Text>
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
-                </ScrollView>
-            </View>
-
+                        {recommendedCommunities.map((event) => (
+                            <View key={event.id} style={styles.eventBox}>
+                                <Text style={styles.eventTitle}>{event.title}</Text>
+                                <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
+                                <Text style={styles.eventDescription}>{event.description}</Text>
+                            </View>
+                        ))}
+                    </ScrollView>
+                </View>
+            </ViewPager>
         </View>
     );
 }
@@ -78,24 +68,20 @@ export default function CommunityScreen({navigation}) {
 const styles = StyleSheet.create({
     outerContainer: {
         flex: 1,
+        backgroundColor: '#25294a',
     },
     topBar: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        borderTopRadius: 8,
-        borderBottomRadius: 8,
-        backgroundColor: '#f0f0f0',
+        height: 60,
+        backgroundColor: '#25294a',
         shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 60,
     },
     circleContainer: {
         width: 40,
@@ -117,52 +103,32 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         lineHeight: 35,
     },
-    circleImage: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 20,
-    },
     searchBar: {
         flex: 1,
         height: 40,
-        backgroundColor: '#eee',
+        backgroundColor: '#F8FAE5',
         borderRadius: 20,
-        borderColor: 'gray',
-        borderWidth: 1,
         paddingHorizontal: 15,
         marginLeft: 10,
-        marginRight: 10,
+        marginRight: -5,
+    },
+    viewPager: {
+        flex: 1,
     },
     scrollView: {
         marginHorizontal: 10,
     },
-    bottomContainer: {
-        backgroundColor: '#f0f0f0',
-        flex: 1, 
-    },
-    section: {
-        marginVertical: 20,
-        padding: 10,
-        borderRadius: 8,
-        backgroundColor: '#f0f0f0',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
     sectionHeader: {
+        alignContent: 'center',
         fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginVertical: 20,
+        color: '#F8FAE5',
     },
     eventBox: {
         padding: 10,
         borderRadius: 5,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#F8FAE5',
         marginBottom: 10,
         marginRight: 10, // for spacing between items in horizontal scroll
         width: 250, // fixed width for horizontal scrolling

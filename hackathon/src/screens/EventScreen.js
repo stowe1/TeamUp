@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
+import ViewPager from '@react-native-community/viewpager';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function EventScreen({ navigation }) {
     const [joinedEvents, setJoinedEvents] = useState([
@@ -48,14 +50,11 @@ export default function EventScreen({ navigation }) {
         );
     };
 
+
     return (
         <View style={styles.container}>
             <View style={styles.search}>
-                <TouchableOpacity style={styles.circleContainer} onPress={() => setModalVisible(true)}>
-                    <View style={styles.circle}>
-                        <Text style={styles.plus}>+</Text>
-                    </View>
-                </TouchableOpacity>
+ 
                 <TextInput
                     style={styles.searchBar}
                     placeholder="Search for Events"
@@ -63,63 +62,45 @@ export default function EventScreen({ navigation }) {
                     onChangeText={setSearchQuery}
                     value={searchQuery}
                 />
-                <View style={styles.circleContainer}>
-                    <View style={styles.circle}></View>
+                <TouchableOpacity style={styles.circleContainer} onPress={() => setModalVisible(true)}>
+                <View style={styles.circle}>
+                    <Ionicons name="add-circle-outline" size={40} color="#F8FAE5" />
                 </View>
+            </TouchableOpacity>
             </View>
-            <ScrollView style={styles.scrollView}>
-                {['joined', 'upcoming'].map(section => (
-                    <View key={section} style={styles.section}>
-                        <Text style={styles.sectionHeader}>{section === 'joined' ? 'Joined Events' : 'Upcoming Events'}</Text>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            {filterEvents(section === 'joined' ? joinedEvents : upcomingEvents).map((event) => (
-                                <View key={event.id} style={styles.eventBox}>
-                                    <Text style={styles.eventTitle}>{event.title}</Text>
-                                    <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
-                                    <Text style={styles.eventDescription}>{event.description}</Text>
-                                    <Button title="Delete" onPress={() => handleDeleteEvent(event.id, section)} />
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
-                ))}
-            </ScrollView>
-            {/* Modal for Adding New Event */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(!modalVisible)}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Title"
-                            onChangeText={(text) => setNewEvent({ ...newEvent, title: text })}
-                            value={newEvent.title}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Date"
-                            onChangeText={(text) => setNewEvent({ ...newEvent, date: text })}
-                            value={newEvent.date}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Location"
-                            onChangeText={(text) => setNewEvent({ ...newEvent, location: text })}
-                            value={newEvent.location}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Description"
-                            onChangeText={(text) => setNewEvent({ ...newEvent, description: text })}
-                            value={newEvent.description}
-                        />
-                        <Button title="Add Event" onPress={handleAddEvent} />
-                    </View>
+            
+            <ViewPager style={styles.viewPager} initialPage={0}>
+                <View key="1">
+                    <ScrollView style={styles.scrollView}>
+                        <Text style={styles.sectionHeader}>Joined Events</Text>
+                        {filterEvents(joinedEvents).map((event) => (
+                            <View key={event.id} style={styles.eventBox}>
+                                <Text style={styles.eventTitle}>{event.title}</Text>
+                                <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
+                                <Text style={styles.eventDescription}>{event.description}</Text>
+                                <Button title="Delete" onPress={() => handleDeleteEvent(event.id, 'joined')} />
+                            </View>
+                        ))}
+                    </ScrollView>
                 </View>
+                <View key="2">
+                    <ScrollView style={styles.scrollView}>
+                        <Text style={styles.sectionHeader}>Upcoming Events</Text>
+                        {filterEvents(upcomingEvents).map((event) => (
+                            <View key={event.id} style={styles.eventBox}>
+                                <Text style={styles.eventTitle}>{event.title}</Text>
+                                <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
+                                <Text style={styles.eventDescription}>{event.description}</Text>
+                                <Button title="Delete" onPress={() => handleDeleteEvent(event.id, 'upcoming')} />
+                            </View>
+                        ))}
+                    </ScrollView>
+                </View>
+            </ViewPager>
+            
+            <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(!modalVisible)}>
+                {/* Modal content for adding a new event */}
+                ...
             </Modal>
         </View>
     );
@@ -128,8 +109,10 @@ export default function EventScreen({ navigation }) {
 const styles = StyleSheet.create({
     // Add your styles here
     container: {
+        
         flex: 1,
         paddingTop: 0,
+        backgroundColor: '#25294a',
     },
     scrollView: {
         marginHorizontal: 10,
@@ -138,7 +121,7 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         padding: 10,
         borderRadius: 8,
-        backgroundColor: '#add8e6',
+        backgroundColor: '#25294a',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -152,11 +135,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
+        borderBottomEndRadius: 100,
+        color: '#F8FAE5',
     },
     eventBox: {
         padding: 10,
         borderRadius: 5,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#F8FAE5',
         marginBottom: 10,
         marginRight: 10,
         width: 250,
@@ -179,10 +164,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         marginTop: 0,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
+        borderTopWidth: 0,
+        borderBottomWidth: 0,
         borderColor: 'gray',
         height: 50,
+        
     },
     circleContainer: {
         width: 40,
@@ -191,11 +177,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     circle: {
-        width: 30,
-        height: 30,
-        borderRadius: 15,
-        borderWidth: 1,
-        borderColor: '#000',
+        width: 50,
+        height: 50,
+        borderColor: '#F8FAE5',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -207,11 +191,13 @@ const styles = StyleSheet.create({
     searchBar: {
         flex: 1,
         height: 40,
-        backgroundColor: '#eee',
+        backgroundColor: '#F8FAE5',
         borderRadius: 20,
         paddingHorizontal: 15,
         marginLeft: 10,
         marginRight: 10,
+        borderWidth: 0,
+        borderColor: 'transparent',
     },
     centeredView: {
         flex: 1,
@@ -241,5 +227,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
+    },
+    viewPager: {
+        flex: 1,
     },
 });
