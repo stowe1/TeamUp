@@ -24,6 +24,7 @@ export default function MapScreen({ navigation, email }) {
                 attribution: '© OpenStreetMap'
             }).addTo(map);
         </script>
+        <script src="./map.js"></script>
     </body>
     </html>
     `;

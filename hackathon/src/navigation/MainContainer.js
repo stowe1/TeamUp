@@ -94,7 +94,7 @@ const TabNavigator = ({ email }) => {
     >
       <Tab.Screen name="Profile" children={() => <ProfileScreen email={email} />} />
       <Tab.Screen name="Community" children={() => <CommunityScreen email={email} />} />
-      <Tab.Screen name="Map" children={() => <MapScreen email={email} />} />
+
       <Tab.Screen name="Event" children={() => <EventScreen email={email} />} />
     </Tab.Navigator>
   );

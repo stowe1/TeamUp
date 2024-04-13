@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, Button, Linking } from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 import { Ionicons } from '@expo/vector-icons';
 
+
 export default function EventScreen({ navigation, email }) {
     const [joinedEvents, setJoinedEvents] = useState([
-        { id: 1, title: 'Community 5K Run', date: 'April 25, 2024', location: 'City Stadium', description: 'A community run for charity.' },
-        { id: 2, title: 'Annual Neighborhood Soccer Game', date: 'April 30, 2024', location: 'Library Hall', description: 'Bring yoiur family and friends to this inclusive soccer experience' },
+        { id: 1, title: 'Community 5K Run', date: 'April 25, 2024', location: 'City Stadium', address: 'Fayetteville, AR 72701', description: 'A community run for charity.' },
+        { id: 2, title: 'Annual Neighborhood Soccer Game', date: 'April 30, 2024', location: 'Library Hall', address:'201 Spring Street Springdale, AR 72764', description: 'Bring yoiur family and friends to this inclusive soccer experience' },
         { id: 3, title: 'Local Flag Football', date: 'May 1, 2024', location: 'Downtown Market', description: 'Ages 10-13 only' }
     ]);
     const [upcomingEvents, setUpcomingEvents] = useState([
@@ -18,12 +19,23 @@ export default function EventScreen({ navigation, email }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [eventDetailsModalVisible, setEventDetailsModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [address, setAddress] = useState('');
+
+    const handleOpenInMaps = () => {
+        console.log(selectedEvent.address);
+        const mapsUrl = `http://maps.apple.com/?daddr=${encodeURIComponent(selectedEvent.address)}`;
+        console.log(mapsUrl);
+        Linking.openURL(mapsUrl);
+    };
+
     
     const [newEvent, setNewEvent] = useState({
         title: '',
         date: '',
         location: '',
+        address: '',
         description: '',
+        
     });
     const [addEventModalVisible, setAddEventModalVisible] = useState(false);
 
@@ -60,6 +72,7 @@ export default function EventScreen({ navigation, email }) {
             title: '',
             date: '',
             location: '',
+            address: '',
             description: '',
         });
     };
@@ -88,6 +101,7 @@ export default function EventScreen({ navigation, email }) {
                                 <View style={styles.eventBox}>
                                     <Text style={styles.eventTitle}>{event.title}</Text>
                                     <Text style={styles.eventInfo}>{event.date} - {event.location}</Text>
+                                    <Text style={styles.eventInfo}>{event.address}</Text>
                                     <Text style={styles.eventDescription}>{event.description}</Text>
                                 </View>
                             </TouchableOpacity>
@@ -121,6 +135,9 @@ export default function EventScreen({ navigation, email }) {
                         <Text style={styles.modalTitle}>{selectedEvent ? selectedEvent.title : ''}</Text>
                         <Text>Date: {selectedEvent ? selectedEvent.date : ''}</Text>
                         <Text>Location: {selectedEvent ? selectedEvent.location : ''}</Text>
+                        <TouchableOpacity onPress={handleOpenInMaps}>
+                        <Text>Address: {selectedEvent ? selectedEvent.address : ''}</Text>
+                        </TouchableOpacity>
                         <Text>Description: {selectedEvent ? selectedEvent.description : ''}</Text>
                         {selectedEvent?.from === 'upcoming' ? (
                             <Button title="Join Event" onPress={joinEvent} />
@@ -144,24 +161,35 @@ export default function EventScreen({ navigation, email }) {
                         <TextInput
                             style={styles.input}
                             placeholder="Title"
+                            placeholderTextColor={'#ccc'}
                             onChangeText={(text) => setNewEvent({ ...newEvent, title: text })}
                             value={newEvent.title}
                         />
                         <TextInput
                             style={styles.input}
                             placeholder="Date"
+                            placeholderTextColor={'#ccc'}
                             onChangeText={(text) => setNewEvent({ ...newEvent, date: text })}
                             value={newEvent.date}
                         />
                         <TextInput
                             style={styles.input}
                             placeholder="Location"
+                            placeholderTextColor={'#ccc'}
                             onChangeText={(text) => setNewEvent({ ...newEvent, location: text })}
                             value={newEvent.location}
                         />
                         <TextInput
                             style={styles.input}
+                            placeholder="Address"
+                            placeholderTextColor={'#ccc'}
+                            onChangeText={(text) => setNewEvent({ ...newEvent, address: text })}
+                            value={newEvent.address}
+                        />
+                        <TextInput
+                            style={styles.input}
                             placeholder="Description"
+                            placeholderTextColor={'#ccc'}
                             onChangeText={(text) => setNewEvent({ ...newEvent, description: text })}
                             value={newEvent.description}
                         />
@@ -270,4 +298,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
     },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+
 });
