@@ -1,19 +1,40 @@
 import * as React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import MapView from 'react-native-maps';
+import { View, StyleSheet } from 'react-native';
+import { WebView } from 'react-native-webview';
 
+export default function MapScreen({ navigation }) {
+    const mapHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Simple Map</title>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <style>
+            #map { height: 100vh; width: 100vw; }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script>
+            var map = L.map('map').setView([37.78825, -122.4324], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+        </script>
+    </body>
+    </html>
+    `;
 
-export default function MapScreen({navigation}) {
     return (
         <View style={styles.container}>
-            <MapView
-  initialRegion={{
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  }}
-/>
+            <WebView
+                originWhitelist={['*']}
+                source={{ html: mapHtml }}
+                style={{ flex: 1 }}
+            />
         </View>
     );
 }
@@ -21,7 +42,5 @@ export default function MapScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });
