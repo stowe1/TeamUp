@@ -81,8 +81,8 @@ const TabNavigator = ({ email }) => {
           let iconName;
           if (route.name === Profile) iconName = focused ? 'person' : 'person-circle';
           else if (route.name === Community) iconName = focused ? 'people' : 'people-circle';
-          else if (route.name === Map) iconName = focused ? 'map' : 'map';
           else if (route.name === Event) iconName = focused ? 'calendar' : 'calendar';
+          else if (route.name === Map) iconName = focused ? 'map' : 'map';
           return <Ionicons name={iconName} size={size} color={color} />;
         }
       })}
@@ -94,8 +94,9 @@ const TabNavigator = ({ email }) => {
     >
       <Tab.Screen name="Profile" children={() => <ProfileScreen email={email} />} />
       <Tab.Screen name="Community" children={() => <CommunityScreen email={email} />} />
-      <Tab.Screen name="Map" children={() => <MapScreen email={email} />} />
       <Tab.Screen name="Event" children={() => <EventScreen email={email} />} />
+      <Tab.Screen name="Map" children={() => <MapScreen email={email} />} />
+      
     </Tab.Navigator>
   );
 }
