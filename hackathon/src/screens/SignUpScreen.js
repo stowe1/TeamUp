@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import {
+  View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView,
+  Platform, ScrollView
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native';
 import { supabase } from '../components/supabase';  // Import your Supabase client
@@ -38,14 +41,14 @@ export default function SignUpScreen({ onSignUp, goBack }) {
             return;
         }
 
-        const { email, password: SignUppassword } = formData.reduce((acc, item) => {
+        const { email, password: signUpPassword } = formData.reduce((acc, item) => {
             acc[item.key] = item.value;
             return acc;
         }, {});
 
         let { user, session, error } = await supabase.auth.signUp({
             email,
-            SignUppassword
+            password: signUpPassword
         });
 
         if (error) {
@@ -53,31 +56,34 @@ export default function SignUpScreen({ onSignUp, goBack }) {
             return;
         }
 
-        // Optionally handle additional user details here
         onSignUp();
     };
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-                <Image source={require('../../assets/TeamUP.png')} style={{ width: 300, height: 300, marginBottom: 30 }} />
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+                <Image source={require('../../assets/TeamUP.png')} style={styles.logo} />
                 <Text style={styles.title}>Welcome!</Text>
-                {formData.map(({ placeholder, value, key, secureTextEntry }) => (
-                    <TextInput
-                        key={key}
-                        style={styles.input}
-                        placeholderTextColor={'orange'}
-                        placeholder={placeholder}
-                        secureTextEntry={secureTextEntry}
-                        value={value}
-                        onChangeText={text => handleInputChange(key, text)}
-                    />
-                ))}
-                <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
+                <View style={styles.formContainer}>
+                    <ScrollView>
+                        {formData.map(({ placeholder, value, key, secureTextEntry }) => (
+                            <TextInput
+                                key={key}
+                                style={styles.input}
+                                placeholderTextColor={'#ce5e31'}
+                                placeholder={placeholder}
+                                secureTextEntry={secureTextEntry}
+                                value={value}
+                                onChangeText={text => handleInputChange(key, text)}
+                            />
+                        ))}
+                    </ScrollView>
+                </View>
+                <TouchableOpacity style={styles.loginButton} onPress={handleSignUp}>
                     <Text style={styles.buttonText}>Sign Up</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => goBack()}>
-                    <Text style={styles.loginText}>Already have an account? Login</Text>
+                <TouchableOpacity style={styles.signupButton} onPress={() => goBack()}>
+                    <Text style={styles.buttonText}>Already have an account? Login</Text>
                 </TouchableOpacity>
             </ScrollView>
         </KeyboardAvoidingView>
@@ -92,11 +98,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         backgroundColor: '#25294a',
     },
+    contentContainer: {
+        alignItems: 'center',
+        paddingVertical: 20,
+    },
+    logo: {
+        width: 300,
+        height: 300,
+        marginBottom: 30,
+    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
         color: 'white',
+    },
+    formContainer: {
+        width: '90%',
+        height: 250,
+        marginBottom: 20,
     },
     input: {
         width: '100%',
@@ -105,25 +125,30 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 100,
         paddingHorizontal: 10,
-        marginBottom: 10,
-        color: 'orange',
+        marginBottom: 20,
+        color: '#ce5e31',
+        backgroundColor: 'black',
+    },
+    loginButton: {
+        width: '100%',
+        height: 40,
+        backgroundColor: '#ce5e31',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginTop: 30,
     },
     signupButton: {
         width: '100%',
         height: 40,
-        backgroundColor: 'blue',
+        backgroundColor: 'gray',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 50,
-        marginTop: 10,
+        borderRadius: 10,
+        marginTop: 30,
     },
     buttonText: {
         color: 'white',
         fontWeight: 'bold',
-    },
-    loginText: {
-        marginTop: 10,
-        color: 'blue',
-        textDecorationLine: 'underline',
     },
 });
